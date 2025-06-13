@@ -11,6 +11,7 @@ dotenv.config();
 const authRoutes = require('./routes/authRoutes');  // handles login, logout, register
 const userRoutes = require('./routes/userRoutes');  // if needed separately
 const productRoutes = require('./routes/productRoutes'); // product APIs
+const barcodeRoutes = require('./routes/barcodeRoutes'); // barcode APIs
 
 // Initialize express app
 const app = express();
@@ -35,6 +36,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/solar-produ
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);  // optional
 app.use('/api/products', productRoutes);
+app.use('/api/barcodes', barcodeRoutes);
 
 // Handle 404
 app.use((req, res) => {
