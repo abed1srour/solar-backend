@@ -17,4 +17,10 @@ router.put('/:id', productController.updateProduct);
 // DELETE product
 router.delete('/:id', productController.deleteProduct);
 
+// Add QR to pool
+router.post('/:id/qr-pool/add', productController.addQrToPool);
+
+// Remove QR from pool
+router.post('/:id/qr-pool/remove', productController.removeQrFromPool);
+
 module.exports = router;

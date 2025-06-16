@@ -57,10 +57,46 @@ exports.getProductsByCategory = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 exports.getProductsByName = async (req, res) => {
   try {
     const products = await Product.find({ name: new RegExp(req.params.name, 'i') }).populate('category');
     res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.addQrToPool = async (req, res) => {
+  try {
+    const { qr } = req.body;
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    if (product.qrPool.includes(qr)) {
+      return res.status(400).json({ message: 'QR already exists in pool' });
+    }
+    product.qrPool.push(qr);
+    product.stock = product.qrPool.length;
+    await product.save();
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.removeQrFromPool = async (req, res) => {
+  try {
+    const { qr } = req.body;
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    const index = product.qrPool.indexOf(qr);
+    if (index === -1) {
+      return res.status(400).json({ message: 'QR not found in pool' });
+    }
+    product.qrPool.splice(index, 1);
+    product.stock = product.qrPool.length;
+    await product.save();
+    res.json(product);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
